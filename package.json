@@ -1,11 +1,30 @@
 {
-  "name": "file-preview",
-  "version": "0.1.0",
-  "private": true,
+  "name": "h-file-preview",
+  "version": "0.1.3",
+  "description": "文件预览",
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
-    "lint": "vue-cli-service lint"
+    "lint": "vue-cli-service lint",
+    "build:lib": "vue-cli-service build --mode prod --name h-file-preview --target lib --dest lib packages/index.js",
+    "build:umd-lib": "vue-cli-service build --mode prod-umd --name h-file-preview --target lib --dest umd-lib packages/index.js"
+  },
+  "main": "lib/h-file-preview.common.js",
+  "keyword": "file preview file-preview",
+  "author": {
+    "name": "lzg",
+    "email": "lzg@hanzhisoft.com",
+    "url": "https://www.hanzhisoft.com"
+  },
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/liangzhigang1/file-preview.git"
+  },
+  "publishConfig": {
+    "tag": "1.0.0",
+    "registry": "https://registry.npmjs.org/",
+    "access": "public"
   },
   "dependencies": {
     "core-js": "^3.8.3",
