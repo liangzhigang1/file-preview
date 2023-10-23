@@ -50,19 +50,28 @@ export default {
   methods: {
     /**
      * 开始加载pdf内容
-     * @param {*} url 
      */
-    loadPdfData(url) {
+    loadPdfData() {
       try {
         let CMAP_URL = 'https://unpkg.com/pdfjs-dist@2.0.943/cmaps/';  // 引入pdf.js的字体 https://unpkg.com/pdfjs-dist@2.0.943/cmaps/
-        this.pdfData = pdfJS.getDocument({            // 读取url的pdf流文件
-          data: url,                                  // PDF url
-          cMapUrl: CMAP_URL,
-          cMapPacked: true,
-        });
-        this.$nextTick(() => {
-          this.renderPage(1);
-        });
+        if (this.url) {
+          const loadingTask = pdfJS.getDocument(url);
+          loadingTask.promise.then((pdf) => {
+            this.pdfData = pdf;
+            this.$nextTick(() => {
+              this.renderPage(1);
+            });
+          })
+        } else {
+          this.pdfData = pdfJS.getDocument({            // 读取url的pdf流文件
+            data: url,                                  // PDF url
+            cMapUrl: CMAP_URL,
+            cMapPacked: true,
+          });
+          this.$nextTick(() => {
+            this.renderPage(1);
+          });
+        }    
       } catch (error) {
         console.error(error)
       }
@@ -154,21 +163,17 @@ export default {
     }
   },
   mounted() {
-    if (this.url) {
-      this.loadPdfData(this.url)
-    } else if(this.data) {
-      this.loadPdfData(this.data)
-    }
+    this.loadPdfData()
   },
   watch: {
     url(val) {
       if (val) {
-        this.loadPdfData(this.url)
+        this.loadPdfData()
       }
     },
     data(val) {
       if (val) {
-        this.loadPdfData(this.data)
+        this.loadPdfData()
       }
     }
   }
