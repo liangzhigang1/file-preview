@@ -1,23 +1,18 @@
 <template>
   <div id="app">
-    <div class="main-container">
-    <input type="file" ref="fielinput" @change="uploadFile" />
-  </div>
-    <pdf-preview
-      :data="data"
-      :isSupportWatermark="true"
-      watermark="lzg"
-    >
-    </pdf-preview>
+    <!-- <WordExamples></WordExamples> -->
+    <PdfExamples></PdfExamples>
   </div>
 </template>
 
 <script>
-// import PdfPreview from "../packages/pdf/index.js"
+import PdfExamples from "../examples/components/pdf-examples"
+import WordExamples from "../examples/components/word-examples"
 export default {
   name: 'App',
   components: {
-    // PdfPreview
+    PdfExamples,
+    WordExamples
   },
   data() {
     return {
@@ -25,18 +20,7 @@ export default {
     }
   },
   methods: {
-    uploadFile() {
-      let inputDom = this.$refs.fielinput;
-      let file = inputDom.files[0];
-      let reader = new FileReader();
-      reader.readAsDataURL(file);
-      reader.onload = () => {
-        let data = atob(
-          reader.result.substring(reader.result.indexOf(",") + 1)
-        );
-        this.data = data;
-      };
-    },
+
   }
 }
 </script>
