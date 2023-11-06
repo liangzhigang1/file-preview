@@ -1,5 +1,20 @@
 const { defineConfig } = require('@vue/cli-service')
 module.exports = defineConfig({
+  devServer: {
+    headers: {
+      'Access-Control-Allow-Origin': '*'
+    },
+    // development server port 8000
+    port: 8002,
+    proxy: {
+      '/api': {
+        target: 'http://183.6.107.44:9094',
+        // pathRewrite: { '^/api': '' },
+        ws: false,
+        changeOrigin: true
+      }
+    }
+  },
   // 修改 src 目录 为 examples 目录
   pages: {
     index: {
