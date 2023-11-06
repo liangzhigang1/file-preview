@@ -50,28 +50,24 @@ export default {
   methods: {
     /**
      * 开始加载pdf内容
+     * @param {*} url 
      */
-    loadPdfData() {
+    loadPdfData(url, type) {
       try {
-        let CMAP_URL = 'https://unpkg.com/pdfjs-dist@2.0.943/cmaps/';  // 引入pdf.js的字体 https://unpkg.com/pdfjs-dist@2.0.943/cmaps/
-        if (this.url) {
-          const loadingTask = pdfJS.getDocument(url);
-          loadingTask.promise.then((pdf) => {
-            this.pdfData = pdf;
-            this.$nextTick(() => {
-              this.renderPage(1);
-            });
-          })
+        // let CMAP_URL = 'https://unpkg.com/pdfjs-dist@2.0.943/cmaps/'  // 引入pdf.js的字体 https://unpkg.com/pdfjs-dist@2.0.943/cmaps/
+        if (type == 'url') {
+          this.pdfData = pdfJS.getDocument(url);
         } else {
           this.pdfData = pdfJS.getDocument({            // 读取url的pdf流文件
             data: url,                                  // PDF url
-            cMapUrl: CMAP_URL,
+            // cMapUrl: CMAP_URL,
+            cMapUrl: "../../../node_modules/pdfjs-dist/cmaps/",// 必须引入字体文件
             cMapPacked: true,
           });
-          this.$nextTick(() => {
-            this.renderPage(1);
-          });
-        }    
+        }
+        this.$nextTick(() => {
+          this.renderPage(1);
+        });
       } catch (error) {
         console.error(error)
       }
@@ -87,19 +83,45 @@ export default {
           pdf.getPage(num).then((page) => {           // 得到某一个pdf
             let canvasContainer = document.getElementById('canvas-container'); // 获取canvas容器
             let canvas = document.createElement('canvas') // 创建canvas
-            let ctx = canvas.getContext('2d')
-            let ratio = this.getRatio(ctx); // 获取页面比率
-            let dialogWidth = this.$refs["canvasCont"].offsetWidth; // 页面宽度
-            let pageWidth = page.view[2] * ratio;       // 视口宽度
-            let scale = dialogWidth / pageWidth;        // 根据页面宽度和视口宽度的比率就是内容区的放大比率
-            let viewport = page.getViewport({ scale }); // 获取viewport
-            this.width = viewport.width * ratio;        // 记录内容区宽，后期添加水印时需要
-            this.height = viewport.height * ratio;      // 记录内容区高，后期添加水印时需要
-            canvas.width = this.width;                  // 设置canvas的宽度
-            canvas.height = this.height;                // 设置canvas的高度
-            canvasContainer.appendChild(canvas);        // 往canvas容器加入canvas
-            ctx.setTransform(ratio, 0, 0, ratio, 0, 0); // // 缩放比率
-            let renderContext = { canvasContext: ctx, viewport: viewport }; // 渲染内容
+            let renderContext = {}
+            if (window.innerWidth > 500) {
+              let ctx = canvas.getContext('2d')
+              let ratio = this.getRatio(ctx); // 获取页面比率
+              let dialogWidth = this.$refs["canvasCont"].offsetWidth; // 页面宽度
+              let pageWidth = page.view[2] * ratio;       // 视口宽度
+              let scale = dialogWidth / pageWidth;        // 根据页面宽度和视口宽度的比率就是内容区的放大比率
+              let viewport = page.getViewport({ scale }); // 获取viewport
+              this.width = viewport.width * ratio;        // 记录内容区宽，后期添加水印时需要
+              this.height = viewport.height * ratio;      // 记录内容区高，后期添加水印时需要
+              canvas.width = this.width;                  // 设置canvas的宽度
+              canvas.height = this.height;                // 设置canvas的高度
+              canvasContainer.appendChild(canvas);        // 往canvas容器加入canvas
+              ctx.setTransform(ratio, 0, 0, ratio, 0, 0); // // 缩放比率
+              renderContext = {
+                canvasContext: ctx,
+                viewport: viewport,
+              }; // 渲染内容
+            } else {
+              let viewport = page.getViewport({ scale: 1 })
+              let canvas = document.createElement('canvas')
+              let ctx = canvas.getContext('2d')
+              canvasContainer.appendChild(canvas)
+              canvas.height = viewport.height
+              canvas.width = viewport.width
+              canvas.style.width = '100%'
+              canvas.style.aspectRatio = 'auto'
+              renderContext = {
+                canvasContext: ctx,
+                viewport: viewport,
+              };
+            }
+            // svg
+            // page.getOperatorList().then((opList) => {
+            //   var svgFx = new PDFJS.SVGGraphics(page.commonObjs, page.objs);
+            //   return svgFx.getSVG(opList, viewport).then(function (svg) {
+            //     pageContainer.appendChild(svg);
+            //   });
+            // });
             page.render(renderContext).promise.then(() => { // 开始渲染
               this.pageNo = num;
               // 添加水印
@@ -163,17 +185,21 @@ export default {
     }
   },
   mounted() {
-    this.loadPdfData()
+    if (this.url) {
+      this.loadPdfData(this.url, 'url')
+    } else if(this.data) {
+      this.loadPdfData(this.data)
+    }
   },
   watch: {
     url(val) {
       if (val) {
-        this.loadPdfData()
+        this.loadPdfData(this.url, 'url')
       }
     },
     data(val) {
       if (val) {
-        this.loadPdfData()
+        this.loadPdfData(this.data)
       }
     }
   }
