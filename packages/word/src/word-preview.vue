@@ -46,15 +46,19 @@ export default {
             let blob = $this.dataURLtoBlob(base64data);
             let childRef = $this.$refs.file;
             renderAsync(blob, childRef, null, {
-              inWrapper: true, // 启用围绕文档内容渲染包装器
-              ignoreWidth: false, // 禁止页面渲染宽度
-              ignoreHeight: false, // 禁止页面渲染高度
-              ignoreFonts: false, // 禁止字体渲染
-              breakPages: true, // 在分页符上启用分页
-              ignoreLastRenderedPageBreak: true, //禁用lastRenderedPageBreak元素的分页
-              experimental: false, //启用实验性功能（制表符停止计算）
-              trimXmlDeclaration: true, //如果为真，xml声明将在解析之前从xml文档中删除
-              debug: false,
+              className: "docx", //默认和文档样式类的类名/前缀
+              inWrapper: true, //启用围绕文档内容呈现包装器
+              ignoreWidth: false, //禁用页面的渲染宽度
+              ignoreHeight: false, //禁用页面的渲染高度
+              ignoreFonts: false, //禁用字体渲染
+              breakPages: true, //在分页符上启用分页
+              ignoreLastRenderedPageBreak: true, //在lastRenderedPageBreak元素上禁用分页
+              experimental: false, //启用实验功能（制表符停止计算）
+              trimXmlDeclaration: true, //如果为true，则在解析之前将从xml文档中删除xml声明
+              useBase64URL: false, //如果为true，图像、字体等将转换为base 64 URL，否则使用URL.createObjectURL
+              useMathMLPolyfill: false, //包括用于铬、边等的MathML多填充。
+              showChanges: false, //启用文档更改的实验渲染（插入/删除）
+              debug: false, //启用额外的日志记录
             })
             //渲染
           };
@@ -85,52 +89,16 @@ export default {
 </script>
 
 <style scoped>
-
-.docx-container ::v-deep .docx-wrapper > section.docx {
-  /* width: 55vw !important; */
+.docx-container {
+  min-width: 810px !important;
+}
+/* .docx-container ::v-deep .docx-wrapper > section.docx {
   padding: 0rem !important;
-  /* min-height: auto !important; */
-  /* box-shadow: none; */
-  /* margin-bottom: 0; */
-  /* overflow-y: scroll; */
-  /* height: 100vh; */
 }
 
 .docx-container ::v-deep .docx-wrapper {
-  /* background-color: #fff;
-  padding: 20px 20px; */
   display:block !important;
   background-color: #fff;
   padding: 0px !important;
-}
-
-/* .docx-container{
-  width: 400px;
-  overflow-x: auto;
-}
-.docx-container ::v-deep .docx-wrapper {
-  background-color: #fff;
-  padding: 20px 20px;
-}
-.docx-container ::v-deep .docx-wrapper > section.docx {
-
-} */
-
-/* .docx-container ::v-deep .docx-wrapper {
-  background-color: #fff;
-  padding: 20px 20px;
-}
-.docx-container ::v-deep .docx-wrapper > section.docx {
-  width: 55vw !important;
-  padding: 0rem !important;
-  min-height: auto !important;
-  box-shadow: none;
-  margin-bottom: 0;
-  overflow-y: scroll;
-  height: 100vh;
-}
-
-.docx-container ::v-deep .docx-wrapper > section.docx::-webkit-scrollbar {
-  display: none;
 } */
 </style>

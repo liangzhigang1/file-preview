@@ -1,6 +1,6 @@
 <template>
   <div>
-    <word-preview url="http://192.168.0.101:8002/api/api-system/system/core/oss/download/1692111372709556225"></word-preview>
+    <word-preview url="http://172.16.91.138:8003/api/api-system/system/core/oss/download/1692111372709556225"></word-preview>
   </div>
 </template>
 

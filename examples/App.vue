@@ -1,7 +1,7 @@
 <template>
   <div id="app">
-    <!-- <WordExamples></WordExamples> -->
-    <PdfExamples></PdfExamples>
+    <WordExamples></WordExamples>
+    <!-- <PdfExamples></PdfExamples> -->
   </div>
 </template>
 
