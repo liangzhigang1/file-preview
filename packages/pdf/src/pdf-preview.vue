@@ -54,14 +54,14 @@ export default {
      */
     loadPdfData(url, type) {
       try {
-        // let CMAP_URL = 'https://unpkg.com/pdfjs-dist@2.0.943/cmaps/'  // 引入pdf.js的字体 https://unpkg.com/pdfjs-dist@2.0.943/cmaps/
+        let CMAP_URL = 'https://unpkg.com/pdfjs-dist@2.0.943/cmaps/'  // 引入pdf.js的字体 https://unpkg.com/pdfjs-dist@2.0.943/cmaps/
         if (type == 'url') {
           this.pdfData = pdfJS.getDocument(url);
         } else {
           this.pdfData = pdfJS.getDocument({            // 读取url的pdf流文件
             data: url,                                  // PDF url
-            // cMapUrl: CMAP_URL,
-            cMapUrl: "../../../node_modules/pdfjs-dist/cmaps/",// 必须引入字体文件
+            cMapUrl: CMAP_URL,
+            // cMapUrl: "./cmaps/",// 必须引入字体文件
             cMapPacked: true,
           });
         }
